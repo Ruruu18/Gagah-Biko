@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
     {
-      "src": "config/wsgi.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     }
   ],
@@ -13,7 +13,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "config/wsgi.py"
+      "dest": "api/index.py"
     }
   ]
 }
