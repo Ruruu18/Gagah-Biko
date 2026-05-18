@@ -1,4 +1,7 @@
 .env
+.env.*
+!*.env.example
+vercel-env.txt
 *.pyc
 __pycache__/
 db.sqlite3
