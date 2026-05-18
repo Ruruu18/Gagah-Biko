@@ -1,6 +1,7 @@
 .env
 .env.*
 !*.env.example
+!.env.production.example
 vercel-env.txt
 *.pyc
 __pycache__/
