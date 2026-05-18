@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Your Cart - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header" style="padding-bottom: 20px;">
+    <h1>Your Cart</h1>
+    <p>Review your order before checkout</p>
+    <div class="divider"></div>
+  </div>
+
+  <div id="emptyCart" class="empty-cart" style="display: none;">
+    <p>🛒</p>
+    <h2>Your cart is empty.</h2>
+    <p>Looks like you haven't added any of our delicious biko yet.</p>
+    <a href="/menu/">Browse our Biko &rarr;</a>
+  </div>
+
+  <div class="cart-page" id="cartContent">
+    <div class="cart-left">
+      <div id="cartItems">
+        <!-- JS will inject cart items here -->
+      </div>
+      <div style="margin-top: 20px;">
+        <a href="{% url 'menu' %}" style="color: var(--text-brown); text-decoration: underline; font-weight: 600;">
+          &larr; Continue Shopping
+        </a>
+      </div>
+    </div>
+
+    <div class="cart-right" id="cartSummary" style="display: none;">
+      <div class="cart-summary-card">
+        <h3 style="margin-bottom: 20px; font-family: var(--font-heading);">Order Summary</h3>
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span id="subtotalAmt">₱0</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Estimated Shipping</span>
+          <span id="shippingAmt">₱50</span>
+        </div>
+        <div class="cart-summary-total">
+          <span>Total</span>
+          <span id="totalAmt">₱0</span>
+        </div>
+        <a href="/checkout/" class="btn-checkout">Proceed to Checkout</a>
+        <p style="font-size: 12px; color: #888; text-align: center; margin-top: 15px;">
+          Shipping calculated at checkout
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+});
+
+function loadCart() {
+    // Try multiple possible localStorage key names
+    let cart = [];
+    const possibleKeys = [
+        'bikoCart', 
+        'cart', 
+        'gagahCart',
+        'cartItems'
+    ];
+
+    for (let key of possibleKeys) {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && 
+                    parsed.length > 0) {
+                    cart = parsed;
+                    console.log(
+                        'Found cart in key:', key, cart
+                    );
+                    break;
+                }
+            } catch(e) {
+                console.log('Error parsing key:', key, e);
+            }
+        }
+    }
+
+    const cartItems  = document.getElementById('cartItems');
+    const emptyCart  = document.getElementById('emptyCart');
+    const cartSummary = document.getElementById('cartSummary');
+    const cartContent = document.getElementById('cartContent');
+
+    if (!cart || cart.length === 0) {
+        if (cartItems)   cartItems.style.display  = 'none';
+        if (emptyCart)   emptyCart.style.display  = 'block';
+        if (cartSummary) cartSummary.style.display = 'none';
+        if (cartContent) cartContent.style.display = 'none';
+        return;
+    }
+
+    // Cart has items — show them
+    if (cartItems)   cartItems.style.display   = 'block';
+    if (emptyCart)   emptyCart.style.display   = 'none';
+    if (cartSummary) cartSummary.style.display = 'block';
+    if (cartContent) cartContent.style.display = 'grid';
+
+    cartItems.innerHTML = '';
+    let subtotal = 0;
+
+    cart.forEach((item, index) => {
+        // Handle different possible data structures
+        const name     = item.name     || 
+                         item.title    || 
+                         item.product_name || 
+                         'Unknown Item';
+        const price    = parseFloat(
+                             item.price || 
+                             item.unit_price || 0
+                         );
+        const quantity = parseInt(
+                             item.quantity || 
+                             item.qty || 1
+                         );
+        const image    = item.image    || 
+                         item.img      || 
+                         item.photo    || '';
+        const itemTotal = price * quantity;
+        subtotal += itemTotal;
+
+        cartItems.innerHTML += `
+        <div class="cart-item" id="cart-item-${index}">
+            ${image ? 
+              `<img src="${image}" 
+                    alt="${name}" 
+                    class="cart-item-img"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+               <div class="cart-item-img-placeholder" style="display:none">🍚</div>` 
+              : 
+              `<div class="cart-item-img-placeholder">🍚</div>`
+            }
+            <div class="cart-item-details">
+                <h3 class="cart-item-name">${name}</h3>
+                <p class="cart-item-price">
+                    ₱${price.toLocaleString()} each
+                </p>
+            </div>
+            <div class="cart-item-qty">
+                <button type="button" 
+                        onclick="changeQty(${index}, -1)">
+                    −
+                </button>
+                <span id="qty-${index}">${quantity}</span>
+                <button type="button" 
+                        onclick="changeQty(${index}, 1)">
+                    +
+                </button>
+            </div>
+            <p class="cart-item-total">
+                ₱${itemTotal.toLocaleString()}
+            </p>
+            <button type="button" 
+                    class="cart-remove-btn" 
+                    onclick="removeItem(${index})"
+                    title="Remove item">
+                🗑
+            </button>
+        </div>`;
+    });
+
+    // Update summary totals
+    const shipping = 50;
+    const total    = subtotal + shipping;
+
+    const subtotalEl = document.getElementById('subtotalAmt');
+    const shippingEl = document.getElementById('shippingAmt');
+    const totalEl    = document.getElementById('totalAmt');
+
+    if (subtotalEl) 
+        subtotalEl.textContent = '₱' + 
+            subtotal.toLocaleString();
+    if (shippingEl) 
+        shippingEl.textContent = '₱' + 
+            shipping.toLocaleString();
+    if (totalEl)    
+        totalEl.textContent = '₱' + 
+            total.toLocaleString();
+}
+
+function getCartKey() {
+    const keys = [
+        'bikoCart', 'cart', 
+        'gagahCart', 'cartItems'
+    ];
+    for (let key of keys) {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && 
+                    parsed.length > 0) {
+                    return key;
+                }
+            } catch(e) {}
+        }
+    }
+    return 'bikoCart';
+}
+
+function changeQty(index, delta) {
+    const key  = getCartKey();
+    const cart = JSON.parse(
+        localStorage.getItem(key) || '[]'
+    );
+
+    if (!cart[index]) return;
+
+    cart[index].quantity = (
+        parseInt(cart[index].quantity || 
+                 cart[index].qty || 1) 
+        + delta
+    );
+
+    // Also update qty/quantity field
+    if (cart[index].qty !== undefined) {
+        cart[index].qty = cart[index].quantity;
+    }
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    localStorage.setItem(key, JSON.stringify(cart));
+    updateCartCount();
+    loadCart();
+}
+
+function removeItem(index) {
+    const key  = getCartKey();
+    const cart = JSON.parse(
+        localStorage.getItem(key) || '[]'
+    );
+    cart.splice(index, 1);
+    localStorage.setItem(key, JSON.stringify(cart));
+    updateCartCount();
+    loadCart();
+}
+
+function updateCartCount() {
+    const key  = getCartKey();
+    const cart = JSON.parse(
+        localStorage.getItem(key) || '[]'
+    );
+    const total = cart.reduce((sum, item) => 
+        sum + parseInt(
+            item.quantity || item.qty || 1
+        ), 0
+    );
+    const badge = document.getElementById('cartCount');
+    if (badge) badge.textContent = total;
+}
+</script>
+{% endblock %}

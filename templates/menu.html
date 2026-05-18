@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Our Menu - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Our Biko Menu</h1>
+    <p>Authentic Filipino sticky rice cakes, made fresh daily.</p>
+    <div class="divider"></div>
+    <h2>Our Biko Specialties</h2>
+  </div>
+
+  <div class="menu-grid">
+    <div class="product-card">
+      <img src="{% static 'images/biko_bilao_1778184493482.png' %}" alt="Bilao (The Party Favorite)" class="product-img">
+      <div class="product-info">
+        <h3>Bilao (The Party Favorite)</h3>
+        <p>Creamy coconut rice topped with toasted coconut curd. Perfect for sharing with family and friends.</p>
+        <div class="product-price">&#8369;500</div>
+        <button class="btn btn-primary full-width" onclick="addToCart('Bilao (The Party Favorite)', 500, '/static/images/biko_bilao_1778184493482.png', this)">
+          <i class="fa-solid fa-cart-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+    <div class="product-card">
+      <img src="{% static 'images/biko_container_1778184629253.png' %}" alt="Biko Microwavable Container" class="product-img">
+      <div class="product-info">
+        <h3>Biko Microwavable Container</h3>
+        <p>The perfect solo portion. Conveniently packed for a quick and satisfying sweet snack anywhere you go.</p>
+        <div class="product-price">&#8369;100</div>
+        <button class="btn btn-primary full-width" onclick="addToCart('Biko Microwavable Container', 100, '/static/images/biko_container_1778184629253.png', this)">
+          <i class="fa-solid fa-cart-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

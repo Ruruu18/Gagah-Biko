@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard — Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>📊 Sales Dashboard</h1>
+            <p style="color: #888; margin-top: 4px;">
+                Welcome back, {{ user.first_name }}! Here's your store overview.
+            </p>
+        </div>
+        <a href="/admin/" class="btn-save" style="text-decoration: none; font-size: 13px; padding: 8px 18px;">
+            ⚙️ Django Admin
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <p class="stat-label">Total Orders</p>
+            <h2 class="stat-number">{{ total_orders }}</h2>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Total Revenue</p>
+            <h2 class="stat-number">
+                &#8369;{{ total_revenue|floatformat:0 }}
+            </h2>
+            <small style="color:#888; font-size:11px;">Delivered orders only</small>
+        </div>
+        <div class="stat-card pending">
+            <p class="stat-label">Pending Orders</p>
+            <h2 class="stat-number">{{ pending_orders }}</h2>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Orders by Status</p>
+            {% for s in status_counts %}
+            <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:4px;">
+                <span style="color:#555; text-transform:capitalize;">{{ s.status }}</span>
+                <span style="font-weight:700; color:#3b1f1f;">{{ s.count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="dashboard-card">
+        <h2>🕐 Recent Orders</h2>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.full_name }}</td>
+                <td>&#8369;{{ order.total|floatformat:0 }}</td>
+                <td>
+                    <span class="order-status status-{{ order.status }}">
+                        {{ order.status|capfirst }}
+                    </span>
+                </td>
+                <td>{{ order.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Best Sellers -->
+    <div class="dashboard-card">
+        <h2>🏆 Best Selling Products</h2>
+        {% for product in best_sellers %}
+        <div class="bestseller-row">
+            <span>{{ product.product_name }}</span>
+            <span style="color:#888;">{{ product.total_qty }} sold</span>
+            <span style="font-weight:700;">
+                &#8369;{{ product.total_sales|floatformat:0 }}
+            </span>
+        </div>
+        {% empty %}
+        <p style="color:#888; font-size:14px;">No sales data yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Page Not Found — Gagah Home Made-Biko{% endblock %}
+{% block content %}
+<div class="not-found-page">
+    <div class="not-found-content">
+        <p class="not-found-emoji">🍚</p>
+        <h1 class="not-found-code">404</h1>
+        <h2>Oops! This page is gone.</h2>
+        <p class="not-found-msg">
+            Looks like this page got eaten up — just like our Biko!
+            The page you're looking for doesn't exist or has been moved.
+        </p>
+        <div class="not-found-actions">
+            <a href="{% url 'home' %}" class="btn-home">← Back to Home</a>
+            <a href="{% url 'menu' %}" class="btn-menu-link">Browse Our Biko →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

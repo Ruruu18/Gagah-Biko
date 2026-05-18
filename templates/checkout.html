@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+  <div class="container">
+    <div class="checkout-header">
+      <a href="/menu/" class="checkout-back-link"><i class="fa-solid fa-arrow-left"></i> Back to shop</a>
+      <div>
+        <p class="checkout-eyebrow">Secure checkout</p>
+        <h1>Complete your order</h1>
+      </div>
+    </div>
+
+    <div class="checkout-section">
+      <div class="checkout-form">
+        <form id="checkout-form" onsubmit="return false;">
+          <div class="checkout-step">
+            <div class="checkout-step-title">
+              <span>1</span>
+              <h2>Contact Information</h2>
+            </div>
+            <div class="checkout-form-grid two-columns">
+              <div class="form-group">
+                <label for="emailAddress">Email Address</label>
+                <input type="email" id="emailAddress" placeholder="name@example.com" oninput="clearError('emailAddress', 'emailErr')" required>
+                <span class="error-message" id="emailErr"></span>
+              </div>
+              <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="09XX XXX XXXX" oninput="clearError('phoneNumber', 'phoneErr')" required>
+                <span class="error-message" id="phoneErr"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-step">
+            <div class="checkout-step-title">
+              <span>2</span>
+              <h2>Shipping Address</h2>
+            </div>
+            <div class="form-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" placeholder="Full Name" oninput="clearError('fullName', 'nameErr')" required>
+              <span class="error-message" id="nameErr"></span>
+            </div>
+            <div class="form-group">
+              <label for="address">Street Address</label>
+              <input type="text" id="address" placeholder="House number, street, barangay" oninput="clearError('address', 'addressErr')" required>
+              <span class="error-message" id="addressErr"></span>
+            </div>
+            <div class="checkout-form-grid three-columns">
+              <div class="form-group">
+                <label for="apartment">Apt/Suite</label>
+                <input type="text" id="apartment" placeholder="Optional">
+              </div>
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="City" oninput="clearError('city', 'cityErr')" required>
+                <span class="error-message" id="cityErr"></span>
+              </div>
+              <div class="form-group">
+                <label for="postalCode">Postal Code</label>
+                <input type="text" id="postalCode" placeholder="Postal Code" oninput="clearError('postalCode', 'postalErr')" required>
+                <span class="error-message" id="postalErr"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-step">
+            <div class="checkout-step-title">
+              <span>3</span>
+              <h2>Shipping Method</h2>
+            </div>
+            <div class="radio-group shipping-options">
+              <label class="radio-label">
+                <span class="radio-label-main">
+                  <input type="radio" name="shipping" value="standard" checked>
+                  <span>
+                    <strong>Standard Delivery</strong>
+                    <small>3-5 business days</small>
+                  </span>
+                </span>
+                <strong class="option-price">&#8369;50</strong>
+              </label>
+              <label class="radio-label">
+                <span class="radio-label-main">
+                  <input type="radio" name="shipping" value="express">
+                  <span>
+                    <strong>Express Delivery</strong>
+                    <small>Next day arrival</small>
+                  </span>
+                </span>
+                <strong class="option-price">&#8369;150</strong>
+              </label>
+            </div>
+          </div>
+
+          <div class="checkout-step">
+            <div class="checkout-step-title">
+              <span>4</span>
+              <h2>Payment</h2>
+            </div>
+            <div class="payment-options" role="group" aria-label="Payment method">
+              <button type="button" class="payment-tab active" data-method="gcash" onclick="setPayment('gcash')" id="btn-gcash">
+                <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                <span>GCash</span>
+              </button>
+              <button type="button" class="payment-tab" data-method="cod" onclick="setPayment('cod')" id="btn-cod">
+                <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                <span>COD</span>
+              </button>
+            </div>
+            <input type="hidden" id="payment_method" value="gcash">
+            <div id="gcash-payment-note" class="payment-detail-panel gcash-payment-panel">
+              <div class="gcash-payment-header">
+                <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                <div>
+                  <strong>Pay with GCash through PayMongo</strong>
+                  <span>You will be redirected to PayMongo to finish your GCash payment.</span>
+                </div>
+              </div>
+              <div class="security-note">
+                <i class="fa-solid fa-lock"></i> PayMongo handles the secure GCash checkout. We never store your wallet details.
+              </div>
+            </div>
+            <div id="cod-payment-note" class="payment-detail-panel payment-method-note" hidden>
+              <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+              <span>Prepare the exact amount when your order arrives.</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <aside class="checkout-sidebar" aria-label="Order summary">
+        <div class="order-summary-card" id="cartSummary">
+          <div class="summary-card-header">
+            <h2>Order Summary</h2>
+            <a href="/cart/" class="summary-edit-link">Edit cart</a>
+          </div>
+
+          <div id="checkoutItems" class="checkout-items">
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="checkoutSubtotal">₱0</span>
+          </div>
+          <div class="summary-row">
+              <span>Shipping</span>
+              <span id="checkoutShipping">₱50</span>
+          </div>
+          <div class="summary-row summary-total">
+              <span>Total</span>
+              <span id="checkoutTotal">₱0</span>
+          </div>
+
+          <button type="button" 
+                  id="completePurchaseBtn"
+                  onclick="submitOrder()"
+                  class="btn-complete-purchase">
+              <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              <span>Complete Purchase</span>
+          </button>
+
+          <p class="artisanal-note">
+              Artisanal Heritage, Crafted to Perfection.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      loadCheckoutSummary();
+  });
+
+  function getCartKey() {
+      const keys = ['bikoCart', 'cart', 'gagahCart', 'cartItems'];
+      for (let key of keys) {
+          try {
+              const raw = localStorage.getItem(key);
+              if (raw) {
+                  const parsed = JSON.parse(raw);
+                  if (Array.isArray(parsed) && parsed.length > 0) {
+                      return key;
+                  }
+              }
+          } catch(e) {}
+      }
+      return 'bikoCart';
+  }
+
+  function loadCheckoutSummary() {
+      const key  = getCartKey();
+      const cart = JSON.parse(localStorage.getItem(key) || '[]');
+
+      const itemsContainer = document.getElementById('checkoutItems');
+      const subtotalEl = document.getElementById('checkoutSubtotal');
+      const totalEl = document.getElementById('checkoutTotal');
+      const shippingEl = document.getElementById('checkoutShipping');
+
+      if (!cart || cart.length === 0) {
+          if (itemsContainer) {
+              itemsContainer.innerHTML = `
+              <p style="color:#888; font-size:14px; text-align:center; padding:16px 0;">
+                  No items in cart. <a href="/menu/" style="color:#3b1f1f; font-weight:600;">Browse Menu</a>
+              </p>`;
+          }
+          return;
+      }
+
+      let subtotal = 0;
+      let itemsHTML = '';
+
+      cart.forEach(item => {
+          const name     = item.name || item.title || item.product_name || 'Biko Item';
+          const price    = parseFloat(item.price || 0);
+          const quantity = parseInt(item.quantity || item.qty || 1);
+          const image    = item.image || item.img || '';
+          const itemTotal = price * quantity;
+          subtotal += itemTotal;
+
+          itemsHTML += `
+          <div class="checkout-item-row">
+              ${image ? 
+                `<img src="${image}" alt="${name}" class="checkout-item-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                 <div class="checkout-item-img-ph" style="display:none">🍚</div>` 
+                : 
+                `<div class="checkout-item-img-ph">🍚</div>`
+              }
+              <div class="checkout-item-info">
+                  <p class="checkout-item-name">${name}</p>
+                  <p class="checkout-item-qty">Qty: ${quantity}</p>
+              </div>
+              <p class="checkout-item-price">₱${itemTotal.toLocaleString()}</p>
+          </div>`;
+      });
+
+      if (itemsContainer) itemsContainer.innerHTML = itemsHTML;
+
+      const shippingFee = getShippingFee();
+      const total = subtotal + shippingFee;
+
+      if (subtotalEl) subtotalEl.textContent = '₱' + subtotal.toLocaleString();
+      if (shippingEl) shippingEl.textContent = '₱' + shippingFee.toLocaleString();
+      if (totalEl) totalEl.textContent = '₱' + total.toLocaleString();
+  }
+
+  function getShippingFee() {
+      const express = document.querySelector('input[name="shipping"][value="express"]');
+      return (express && express.checked) ? 150 : 50;
+  }
+
+  document.querySelectorAll('input[name="shipping"]').forEach(radio => {
+      radio.addEventListener('change', loadCheckoutSummary);
+  });
+
+  function setPayment(method) {
+      document.getElementById('payment_method').value = method;
+      const gcashNote = document.getElementById('gcash-payment-note');
+      const codNote = document.getElementById('cod-payment-note');
+      if (gcashNote) {
+          gcashNote.hidden = method !== 'gcash';
+      }
+      if (codNote) {
+          codNote.hidden = method !== 'cod';
+      }
+      document.querySelectorAll('.payment-tab').forEach(btn => {
+          btn.classList.remove('active');
+          if (btn.dataset.method === method) {
+              btn.classList.add('active');
+          }
+      });
+  }
+
+  async function submitOrder() {
+      const key  = getCartKey();
+      const cart = JSON.parse(localStorage.getItem(key) || '[]');
+
+      if (!cart || cart.length === 0) {
+          showToast('Your cart is empty!', 'error');
+          return;
+      }
+
+      const email = document.getElementById('emailAddress')?.value.trim() || '';
+      const phone = document.getElementById('phoneNumber')?.value.trim() || '';
+      const fullName = document.getElementById('fullName')?.value.trim() || '';
+      const address = document.getElementById('address')?.value.trim() || '';
+      const apartment = document.getElementById('apartment')?.value.trim() || '';
+      const city = document.getElementById('city')?.value.trim() || '';
+      const postal = document.getElementById('postalCode')?.value.trim() || '';
+
+      if (!email || !phone || !fullName || !address || !city || !postal) {
+          showToast('Please fill in all required fields.', 'warning');
+          return;
+      }
+
+      const expressRadio = document.querySelector('input[name="shipping"][value="express"]');
+      const shippingMethod = (expressRadio && expressRadio.checked) ? 'express' : 'standard';
+      const shippingFee = shippingMethod === 'express' ? 150 : 50;
+
+      const activePayment = document.querySelector('.payment-tab.active');
+      const paymentMethod = activePayment ? activePayment.dataset.method : 'cod';
+
+      let subtotal = 0;
+      const items = cart.map(item => {
+          const price = parseFloat(item.price || 0);
+          const quantity = parseInt(item.quantity || item.qty || 1);
+          subtotal += price * quantity;
+          return {
+              product_name: item.name || item.title || item.product_name,
+              quantity: quantity,
+              price: price,
+          };
+      });
+
+      const orderData = {
+          full_name: fullName,
+          email: email,
+          phone: phone,
+          address: address,
+          apartment: apartment,
+          city: city,
+          postal_code: postal,
+          shipping_method: shippingMethod,
+          payment_method: paymentMethod,
+          gcash_reference: '',
+          subtotal: subtotal,
+          shipping_fee: shippingFee,
+          total: subtotal + shippingFee,
+          items: items,
+      };
+
+      const btn = document.getElementById('completePurchaseBtn');
+      if (btn) {
+          btn.innerHTML = '<span class="spinner"></span> Processing...';
+          btn.disabled = true;
+      }
+
+      try {
+          const endpoint = paymentMethod === 'cod'
+              ? '/place-order/'
+              : '/create-paymongo-checkout-session/';
+          const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken'),
+              },
+              body: JSON.stringify(orderData)
+          });
+
+          const result = await response.json();
+          if (result.success) {
+              if (paymentMethod === 'cod') {
+                  localStorage.removeItem(key);
+                  updateCartCount();
+                  window.location.href = '/order-success/?id=' + result.order_id;
+              } else if (result.checkout_url) {
+                  window.location.href = result.checkout_url;
+              } else {
+                  showToast('PayMongo did not return a checkout link.', 'error');
+                  if (btn) { btn.innerHTML = '<i class="fa-solid fa-lock" aria-hidden="true"></i><span>Complete Purchase</span>'; btn.disabled = false; }
+              }
+          } else {
+              showToast(result.error || 'Error placing order.', 'error');
+              if (btn) { btn.innerHTML = '<i class="fa-solid fa-lock" aria-hidden="true"></i><span>Complete Purchase</span>'; btn.disabled = false; }
+          }
+      } catch (err) {
+          showToast('Network error. Please try again.', 'error');
+          if (btn) { btn.innerHTML = '<i class="fa-solid fa-lock" aria-hidden="true"></i><span>Complete Purchase</span>'; btn.disabled = false; }
+      }
+  }
+</script>
+{% endblock %}

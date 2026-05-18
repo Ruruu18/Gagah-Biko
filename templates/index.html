@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="badge">&#8853; THE HERITAGE OF SWEETNESS</div>
+  <h1>Authentic Biko, Crafted to Perfection</h1>
+  <p>Savor the rich, artisanal heritage of the Philippines. Our biko is slow-cooked to achieve the perfect balance of creamy coconut and caramelized sweetness.</p>
+  <div class="hero-buttons">
+    <a href="{% url 'menu' %}" class="btn btn-primary">Order Now</a>
+    <a href="{% url 'menu' %}" class="btn btn-secondary">Explore Menu</a>
+  </div>
+</section>
+
+<section class="customer-reviews-section" aria-labelledby="customerReviewsTitle">
+  <div class="container">
+    <div class="reviews-header">
+      <span class="reviews-eyebrow">Tingog sa suki</span>
+      <h2 id="customerReviewsTitle">Mga Pahayag ng Suki</h2>
+      <p>Tagalog at Bisaya lang ang ipinapakita para tunay ang dating ng mga sabi ng suki.</p>
+    </div>
+
+    <div class="review-stack">
+      <article class="review-card review-card-featured">
+        <img class="review-image" src="{% static 'images/review_biko_bilao.jpg' %}" alt="Bilao of biko topped with latik">
+        <div class="review-rating" aria-label="5 out of 5 stars">★★★★★</div>
+        <p>"Sobrang sarap ng biko, hindi tinipid sa latik. Tamang-tama ang tamis at ang lambot kahit kinabukasan."</p>
+        <div class="review-author">
+          <strong>Maria L.</strong>
+          <span>Napamatud-an nga order</span>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <img class="review-image" src="{% static 'images/review_biko_slice.jpg' %}" alt="Slice of biko served on a banana leaf">
+        <div class="review-rating" aria-label="5 out of 5 stars">★★★★★</div>
+        <p>"Lami kaayo ang biko, humot ang gata ug fresh gyud pag-abot. Balik-balik ko ani."</p>
+        <div class="review-author">
+          <strong>Jun P.</strong>
+          <span>Surigao City</span>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <img class="review-image" src="{% static 'images/review_biko_packs.jpeg' %}" alt="Packed biko orders on banana leaves">
+        <div class="review-rating" aria-label="5 out of 5 stars">★★★★★</div>
+        <p>"Masarap panghanda sa pamilya. Malinis ang pagkabalot at sulit ang bilao para sa salu-salo."</p>
+        <div class="review-author">
+          <strong>Alma R.</strong>
+          <span>Nahatod nga order</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shipping Info — Gagah Home Made-Biko{% endblock %}
+{% block content %}
+<div class="policy-page">
+    <div class="policy-hero">
+        <h1>Shipping Information</h1>
+        <p>Everything you need to know about receiving your Biko.</p>
+    </div>
+    <div class="policy-content">
+
+        <div class="shipping-cards">
+            <div class="shipping-card">
+                <div class="shipping-icon">🚚</div>
+                <h3>Standard Delivery</h3>
+                <p class="shipping-price">&#8369;50</p>
+                <p>3–5 Business Days</p>
+                <p>Within Surigao City area</p>
+            </div>
+            <div class="shipping-card featured">
+                <div class="shipping-icon">⚡</div>
+                <h3>Express Delivery</h3>
+                <p class="shipping-price">&#8369;150</p>
+                <p>Next Day Arrival</p>
+                <p>Within Surigao City area</p>
+            </div>
+        </div>
+
+        <div class="policy-section">
+            <h2>📦 Order Processing</h2>
+            <ul>
+                <li>Orders placed before <strong>12:00 PM</strong> are processed the same day</li>
+                <li>Orders placed after 12:00 PM are processed the next business day</li>
+                <li>We operate <strong>Monday to Friday, 9AM – 6PM</strong></li>
+                <li>No processing on weekends and holidays</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>🍱 Packaging</h2>
+            <p>All Biko products are carefully packed in food-safe, sealed containers to ensure freshness during transit. Bilao orders are wrapped securely to prevent damage.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>📍 Delivery Areas</h2>
+            <p>We currently deliver exclusively within the Surigao City area. For bulk or custom orders, please contact us to confirm availability and pricing.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>❓ Tracking Your Order</h2>
+            <p>Once your order is shipped, we will contact you via phone or email with your tracking details. You can also check your order status in your
+            <a href="{% url 'order_history' %}">My Orders</a> page.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>📞 Shipping Support</h2>
+            <p>Having issues with your delivery?<br>
+            Call us: <strong>09707007290</strong><br>
+            Email: <strong>eugenecurisesyujin@gmail.com</strong><br>
+            Mon–Fri, 9AM–6PM</p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

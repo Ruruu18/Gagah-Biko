@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}FAQ — Gagah Home Made-Biko{% endblock %}
+{% block content %}
+<div class="policy-page">
+    <div class="policy-hero">
+        <h1>Frequently Asked Questions</h1>
+        <p>Got questions? We've got answers.</p>
+    </div>
+    <div class="policy-content">
+        <div class="faq-list">
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What is Biko? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Biko is a traditional Filipino sticky rice cake made from glutinous rice, coconut milk, and brown sugar. It is a beloved Filipino delicacy often served at fiestas, birthdays, and family gatherings.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How long does Biko last? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>At room temperature: 3–5 days.<br>
+                    Refrigerated: up to 2 weeks.<br>
+                    Frozen: up to 1 month.<br>
+                    Simply microwave for 1–2 minutes to reheat.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Do you use preservatives? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely not. All our Biko is made fresh daily using only natural ingredients — glutinous rice, coconut milk, and sugar. No preservatives, no artificial flavors.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can I order in bulk for events? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! We accept bulk orders for birthdays, fiestas, corporate events, and more. Please contact us at least 3–5 days before your event to ensure availability.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What payment methods do you accept? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>We accept:<br>📱 GCash<br>💵 Cash on Delivery (COD)</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can I cancel or change my order? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Order changes or cancellations must be requested within 2 hours of placing the order by contacting us via phone or email. Once the order is being prepared, we cannot accept cancellations.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Do you deliver outside Surigao City? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>No, currently we only deliver within the Surigao City area via Standard Delivery (3–5 business days, &#8369;50) or Express Delivery (Next Day, &#8369;150).</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How do I track my order? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>After your order is shipped, we will send tracking details to your email. You can also check your order status anytime in your
+                    <a href="{% url 'order_history' %}">My Orders</a> page.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Still have questions? <span class="faq-arrow">▾</span>
+                </button>
+                <div class="faq-answer">
+                    <p>We'd love to hear from you!<br>
+                    📧 eugenecurisesyujin@gmail.com<br>
+                    📞 09707007290<br>
+                    Or visit our <a href="{% url 'contact' %}">Contact page</a>.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const arrow  = btn.querySelector('.faq-arrow');
+    const isOpen = answer.classList.contains('open');
+
+    document.querySelectorAll('.faq-answer').forEach(a => {
+        a.classList.remove('open');
+        a.style.maxHeight = null;
+    });
+    document.querySelectorAll('.faq-arrow').forEach(a => {
+        a.style.transform = 'rotate(0deg)';
+    });
+
+    if (!isOpen) {
+        answer.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        arrow.style.transform  = 'rotate(180deg)';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="container">
+  <section class="about-section">
+    <div class="about-image-wrapper">
+      <img src="{% static 'images/biko_story_1778184640063.png' %}" alt="Family making biko" class="about-img">
+    </div>
+    <div class="about-content">
+      <h2>The Gagah Home Made-Biko Story</h2>
+      <!-- Tagline -->
+      <p class="about-tagline">
+          "Bringing the heart of the fiesta to your 
+          table, one sticky slice at a time."
+      </p>
+
+      <!-- Paragraph 1 -->
+      <p class="about-text">
+          Every tray of Biko you see here isn't just 
+          made of rice, coconut milk, and sugar. 
+          It's made of <strong>teamwork.</strong>
+      </p>
+
+      <!-- Paragraph 2 -->
+      <p class="about-text">
+          In our home, the kitchen is where the hard 
+          work happens. While one of us prepares the 
+          banana leaves, another is carefully stirring 
+          the pot, making sure every grain of rice is 
+          coated in that rich, golden caramel. It's a 
+          slow process that requires a lot of patience 
+          but we don't mind the heat or the tired arms.
+      </p>
+
+      <!-- Paragraph 3 -->
+      <p class="about-text">
+          <strong>Why do we do it?</strong> We started 
+          this business with a simple goal: to help our 
+          family move forward. Every <em>bilao</em> we 
+          sell and every tub we deliver goes directly to 
+          keeping our lights on, paying the bills, and 
+          making sure our needs are met.
+      </p>
+
+      <!-- Paragraph 4 -->
+      <p class="about-text">
+          When you order from us, you aren't just getting 
+          a delicious, traditional treat. You are helping 
+          a family stay afloat. You are part of the reason 
+          we can keep going.
+      </p>
+
+      <!-- Paragraph 5 -->
+      <p class="about-text">
+          From our family's kitchen to your table — thank 
+          you for tasting the love and supporting 
+          our journey.
+      </p>
+
+      <!-- Button -->
+      <a href="{% url 'contact' %}" 
+         class="btn-heritage">
+          Learn more about our heritage
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

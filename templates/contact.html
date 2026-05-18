@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact Us - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1 id="contact-heading">Get in Touch</h1>
+    <p>Whether you're inquiring about our seasonal biko flavors or planning a bespoke gift box, we'd love to hear from you.</p>
+  </div>
+
+  <section class="contact-section" aria-labelledby="contact-heading">
+    <div class="contact-left">
+      <div class="contact-info-card">
+        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+        <div>
+          <h4>Location</h4>
+          <p>Espina Street, Surigao City,<br>Surigao Del Norte</p>
+        </div>
+      </div>
+      <div class="contact-info-card">
+        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+        <div>
+          <h4>Phone</h4>
+          <p>09707007290<br>Mon&ndash;Fri, 9am&ndash;6pm</p>
+        </div>
+      </div>
+      <div class="contact-info-card">
+        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+        <div>
+          <h4>Email</h4>
+          <p>eugenecurisesyujin@gmail.com</p>
+        </div>
+      </div>
+
+      <div class="contact-map-header">
+        <span>Visit our kitchen</span>
+        <h4>Find Us Here</h4>
+      </div>
+      <div class="map-container">
+          <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.5!2d125.4955!3d9.7847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3304a75f3b8e2a0b%3A0x0!2sEspina+St%2C+Surigao+City%2C+Surigao+del+Norte!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
+              width="100%"
+              height="350"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Gagah Home Made-Biko Location">
+          </iframe>
+      </div>
+    </div>
+
+    <div class="contact-right">
+      <div class="contact-form">
+        <div class="contact-form-header">
+          <span>Orders, gifts, and custom requests</span>
+          <h3>Send us a Message</h3>
+        </div>
+        <form onsubmit="event.preventDefault(); alert('Message sent!');">
+          <div class="form-row">
+            <label>
+              <span>First Name</span>
+              <input type="text" placeholder="Maria" required>
+            </label>
+            <label>
+              <span>Last Name</span>
+              <input type="text" placeholder="Santos" required>
+            </label>
+          </div>
+          <label>
+            <span>Email Address</span>
+            <input type="email" placeholder="name@example.com" required>
+          </label>
+          <label>
+            <span>Subject</span>
+            <select required>
+              <option value="" disabled selected>Select a topic</option>
+              <option value="inquiry">Inquiry about Seasonal Flavors</option>
+              <option value="bulk">Bulk Order / Bespoke Gift Box</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <label>
+            <span>Your Message</span>
+            <textarea rows="5" placeholder="Tell us what you need and your preferred date." required></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary full-width">Send Message <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

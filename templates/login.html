@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Log In - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="logo" style="margin-bottom: 20px;"><a href="/">Gagah</a></div>
+    <h2>Welcome Back</h2>
+    <p>Please log in to your account to place an order and enjoy our premium Biko.</p>
+
+    <form id="loginForm">
+      <input type="text" id="loginEmail" placeholder="Username or Email" required>
+      <div class="password-field">
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="button" class="password-toggle" data-target="loginPassword" aria-label="Show password" title="Show password">
+          <i class="fa-regular fa-eye" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="flex-between" style="margin-bottom: 20px;">
+        <div class="checkbox-row" style="margin-bottom: 0;">
+          <input type="checkbox" id="keep-logged" checked>
+          <label for="keep-logged">Keep me logged in</label>
+        </div>
+        <a href="{% url 'forgot_password' %}" style="font-size: 0.85rem; color: var(--accent-gold);">Forgot?</a>
+      </div>
+
+      <button type="button" id="loginBtn" class="btn btn-primary full-width">Log In</button>
+    </form>
+
+    <div class="auth-divider"><span>NEW TO GAGAH-BIKO?</span></div>
+
+    <a href="/signup/" class="btn btn-outline full-width">Create an Account</a>
+
+    <p class="auth-note">"Order some Biko-Specialty to try and experience about our product"</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('loginBtn')
+    .addEventListener('click', async function() {
+      const email    = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const keepLoggedIn = document.getElementById('keep-logged').checked;
+
+      if (!email || !password) {
+        showToast('Please enter your email and password.', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('loginBtn');
+      const origText = btn.textContent;
+      btn.innerHTML = '<span class="spinner"></span> Signing in...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/login-user/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            keep_logged_in: keepLoggedIn
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const params = new URLSearchParams(
+                window.location.search);
+            const next = params.get('next') || '/';
+            navigateWithTransition(next);
+        } else {
+          btn.innerHTML = origText;
+          btn.disabled = false;
+          showToast('Login failed: ' + result.error, 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        btn.innerHTML = origText;
+        btn.disabled = false;
+        showToast('Network error. Please try again.', 'error');
+      }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}My Orders - Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 60px 20px;">
+  <div class="page-header">
+    <h1>My Orders</h1>
+    <p>Here's a history of all your delicious Biko orders.</p>
+    <div class="divider"></div>
+  </div>
+
+  {% if orders %}
+    <div style="max-width: 800px; margin: 0 auto;">
+      {% for order in orders %}
+      <div class="order-card" style="background: #fff; border-radius: 12px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(59,31,31,0.06);">
+        <div class="flex-between" style="margin-bottom: 15px;">
+          <div>
+            <strong style="font-family: var(--font-heading); font-size: 1.1rem;">Order #{{ order.id }}</strong>
+            <span style="margin-left: 15px; font-size: 0.85rem; color: #888;">{{ order.created_at|date:"F j, Y" }}</span>
+          </div>
+          <span style="background: #f5efe8; color: var(--text-brown); padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;">
+            {{ order.payment_method|upper }}
+          </span>
+        </div>
+        <div style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+          {% for item in order.items.all %}
+          <div class="flex-between" style="margin-bottom: 8px; font-size: 0.95rem;">
+            <span>{{ item.product_name }} &times; {{ item.quantity }}</span>
+            <span style="color: var(--accent-gold); font-weight: 600;">&#8369;{{ item.price }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="flex-between" style="border-top: 1px solid var(--border-light); padding-top: 15px; margin-top: 10px; font-weight: 700; font-size: 1rem;">
+          <span>Total</span>
+          <span style="color: var(--accent-gold);">&#8369;{{ order.total }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 60px 20px;">
+      <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--border-light); margin-bottom: 20px;"></i>
+      <h3>No orders yet</h3>
+      <p style="color: #888; margin-bottom: 30px;">You haven't placed any orders. Try our delicious Biko!</p>
+      <a href="/menu/" class="btn btn-primary">Browse Our Menu</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

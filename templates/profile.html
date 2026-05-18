@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile — Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <h1>My Profile</h1>
+    <p class="profile-subtitle">
+        Manage your account information.
+    </p>
+
+    <!-- Update Profile Card -->
+    <div class="profile-card">
+        <h2>Personal Information</h2>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="fullName" 
+                   value="{{ full_name }}"
+                   class="profile-input">
+        </div>
+
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="profileEmail" 
+                   value="{{ user.email }}"
+                   class="profile-input">
+        </div>
+
+        <button class="btn-save" id="saveProfileBtn"
+                onclick="saveProfile()">
+            Save Changes
+        </button>
+        <p class="profile-msg" id="profileMsg"></p>
+    </div>
+
+    <!-- Change Password Card -->
+    <div class="profile-card">
+        <h2>Change Password</h2>
+
+        <div class="form-group">
+            <label>Current Password</label>
+            <div class="password-field">
+                <input type="password" id="currentPass"
+                       class="profile-input"
+                       placeholder="Enter current password">
+                <button type="button" class="password-toggle" data-target="currentPass" aria-label="Show password" title="Show password">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>New Password</label>
+            <div class="password-field">
+                <input type="password" id="newPass"
+                       class="profile-input"
+                       placeholder="Min. 8 characters">
+                <button type="button" class="password-toggle" data-target="newPass" aria-label="Show password" title="Show password">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Confirm New Password</label>
+            <div class="password-field">
+                <input type="password" id="confirmPass"
+                       class="profile-input"
+                       placeholder="Repeat new password">
+                <button type="button" class="password-toggle" data-target="confirmPass" aria-label="Show password" title="Show password">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn-save" id="changePassBtn"
+                onclick="changePassword()">
+            Change Password
+        </button>
+        <p class="profile-msg" id="passMsg"></p>
+    </div>
+
+</div>
+
+<script>
+function getCookie(name) {
+    let c = null;
+    document.cookie.split(';').forEach(cookie => {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '='))
+            c = decodeURIComponent(
+                cookie.substring(name.length + 1));
+    });
+    return c;
+}
+
+async function saveProfile() {
+    const btn = document.getElementById('saveProfileBtn');
+    const msg = document.getElementById('profileMsg');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    const response = await fetch('/update-profile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            full_name: document.getElementById('fullName').value,
+            email: document.getElementById('profileEmail').value,
+        })
+    });
+    const result = await response.json();
+    if (result.success && result.name) {
+        document.getElementById('fullName').value = result.name;
+    }
+    msg.textContent = result.message || result.error;
+    msg.style.color = result.success ? 'green' : 'red';
+    btn.textContent = 'Save Changes';
+    btn.disabled = false;
+}
+
+async function changePassword() {
+    const btn = document.getElementById('changePassBtn');
+    const msg = document.getElementById('passMsg');
+    btn.textContent = 'Changing...';
+    btn.disabled = true;
+
+    const response = await fetch('/change-password/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            current_password: 
+                document.getElementById('currentPass').value,
+            new_password: 
+                document.getElementById('newPass').value,
+            confirm_password: 
+                document.getElementById('confirmPass').value,
+        })
+    });
+    const result = await response.json();
+    msg.textContent = result.message || result.error;
+    msg.style.color = result.success ? 'green' : 'red';
+    btn.textContent = 'Change Password';
+    btn.disabled = false;
+
+    if (result.success) {
+        document.getElementById('currentPass').value = '';
+        document.getElementById('newPass').value = '';
+        document.getElementById('confirmPass').value = '';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gagah Home Made-Biko{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260518-orders-tracking-v1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  {# Hidden form so the CSRF cookie is always set #}
+  <form style="display:none">{% csrf_token %}</form>
+
+  {# Toast notification container #}
+  <div id="toastContainer" class="toast-container"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo"><a href="{% url 'home' %}">Gagah Biko</a></div>
+      
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="{% url 'home' %}"
+           class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+        <a href="{% url 'menu' %}"
+           class="{% if request.resolver_match.url_name == 'menu' %}active{% endif %}">Our Biko</a>
+        <a href="{% url 'about' %}"
+           class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About Us</a>
+        <a href="{% url 'contact' %}"
+           class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="{% url 'cart' %}" class="cart-icon" aria-label="View cart">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            <span class="cart-badge" id="cartCount">0</span>
+        </a>
+
+        {% if user.is_authenticated and not user.is_staff %}
+          <div class="nav-user-inline" aria-label="Account actions">
+            <a href="{% url 'order_history' %}" class="nav-my-orders" aria-label="View my orders">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                <span>Orders</span>
+            </a>
+            <span class="nav-username">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+              {{ user.first_name|default:"User" }}
+            </span>
+            <button type="button" 
+                    class="btn-logout" 
+                    onclick="logoutUser()">
+              <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+              <span>Log Out</span>
+            </button>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-primary nav-login">Log in / Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-logo">Gagah-Biko Specialty</div>
+    <p>&copy; 2024 Gagah Home Made-Biko. Artisanal Heritage, Modern Luxury.</p>
+    <div class="footer-links">
+      <a href="{% url 'sustainability' %}">Sustainability</a>
+      <a href="{% url 'shipping_info' %}">Shipping Info</a>
+      <a href="{% url 'faq' %}">FAQ</a>
+      <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+      <a href="{% url 'terms_of_service' %}">Terms of Service</a>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/script.js' %}?v=20260518-paymongo-gcash-v1"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

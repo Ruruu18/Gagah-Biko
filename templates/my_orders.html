@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders — Gagah Home Made-Biko{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+
+    <div class="orders-header">
+        <div>
+            <span class="orders-kicker">Account</span>
+            <h1>My Orders</h1>
+            <p>Track order status, delivery details, and totals in one place.</p>
+        </div>
+        {% if orders %}
+        <div class="orders-count">
+            <strong>{{ orders|length }}</strong>
+            <span>order{{ orders|length|pluralize }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if orders %}
+        <div class="orders-list">
+        {% for order in orders %}
+        <div class="order-card">
+
+            <div class="order-card-header">
+                <div class="order-title-group">
+                    <span class="order-id">Order #{{ order.id }}</span>
+                    <span class="order-date">{{ order.created_at|date:"M d, Y" }}</span>
+                </div>
+                <span class="order-status status-{{ order.status }}">
+                    {% if order.status == 'pending' %}
+                        Pending
+                    {% elif order.status == 'confirmed' %}
+                        Confirmed
+                    {% elif order.status == 'shipped' %}
+                        Shipped
+                    {% elif order.status == 'delivered' %}
+                        Delivered
+                    {% elif order.status == 'cancelled' %}
+                        Cancelled
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if order.status == 'cancelled' %}
+            <div class="order-cancelled-note">
+                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                <span>This order was cancelled. Contact us if you need help placing a new order.</span>
+            </div>
+            {% else %}
+            <div class="order-progress" aria-label="Order progress">
+                <div class="order-progress-step {% if order.status == 'pending' %}is-current{% elif order.status == 'confirmed' or order.status == 'shipped' or order.status == 'delivered' %}is-complete{% endif %}">
+                    <span class="progress-dot"></span>
+                    <strong>Pending</strong>
+                    <small>Order received</small>
+                </div>
+                <div class="order-progress-step {% if order.status == 'confirmed' %}is-current{% elif order.status == 'shipped' or order.status == 'delivered' %}is-complete{% endif %}">
+                    <span class="progress-dot"></span>
+                    <strong>Confirmed</strong>
+                    <small>Payment checked</small>
+                </div>
+                <div class="order-progress-step {% if order.status == 'shipped' %}is-current{% elif order.status == 'delivered' %}is-complete{% endif %}">
+                    <span class="progress-dot"></span>
+                    <strong>Shipped</strong>
+                    <small>Out for delivery</small>
+                </div>
+                <div class="order-progress-step {% if order.status == 'delivered' %}is-complete{% endif %}">
+                    <span class="progress-dot"></span>
+                    <strong>Delivered</strong>
+                    <small>Completed</small>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="order-items-list">
+                {% for item in order.items.all %}
+                <div class="order-item-row">
+                    <span class="order-item-name">
+                        {{ item.product_name }}
+                    </span>
+                    <span class="order-item-qty">
+                        x{{ item.quantity }}
+                    </span>
+                    <span class="order-item-price">
+                        ₱{{ item.price|floatformat:0 }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="order-card-footer">
+                <div class="order-shipping">
+                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    <span>{{ order.address }}, {{ order.city }}</span>
+                </div>
+                <div class="order-total">
+                    <span>Total</span>
+                    <strong>₱{{ order.total|floatformat:0 }}</strong>
+                </div>
+            </div>
+
+            {% if order.status == 'delivered' %}
+                {% if order.review %}
+                <div class="order-review-panel is-submitted">
+                    <div>
+                        <span class="review-label">Your feedback</span>
+                        <strong>{{ order.review.rating }} out of 5 stars</strong>
+                    </div>
+                    <p>{{ order.review.comment }}</p>
+                </div>
+                {% else %}
+                <form class="order-review-panel" method="post" action="{% url 'submit_order_review' order.id %}">
+                    {% csrf_token %}
+                    <div class="review-panel-header">
+                        <div>
+                            <span class="review-label">Delivered</span>
+                            <h2>How was your order?</h2>
+                        </div>
+                        <select name="rating" aria-label="Rating" required>
+                            <option value="">Rate</option>
+                            <option value="5">5 stars</option>
+                            <option value="4">4 stars</option>
+                            <option value="3">3 stars</option>
+                            <option value="2">2 stars</option>
+                            <option value="1">1 star</option>
+                        </select>
+                    </div>
+                    <textarea name="comment" rows="3" maxlength="1000" placeholder="Share your feedback" required></textarea>
+                    <button type="submit" class="btn-submit-review">Submit Review</button>
+                </form>
+                {% endif %}
+            {% endif %}
+
+        </div>
+        {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="empty-orders">
+            <div class="empty-orders-icon" aria-hidden="true">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <h2>No orders yet</h2>
+            <p>You have not placed any orders yet. Browse our Biko and place your first order.</p>
+            <a href="{% url 'menu' %}" class="btn-order-now">
+                Order Now
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
