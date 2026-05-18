@@ -58,6 +58,7 @@ ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app')
 if os.getenv('VERCEL_URL'):
     ALLOWED_HOSTS.append(os.getenv('VERCEL_URL'))
 HAS_WHITENOISE = importlib.util.find_spec('whitenoise') is not None
+IS_VERCEL = env_bool('VERCEL', False)
 
 
 # Application definition
@@ -163,8 +164,8 @@ STORAGES = {
     },
     'staticfiles': {
         'BACKEND': (
-            'whitenoise.storage.CompressedManifestStaticFilesStorage'
-            if HAS_WHITENOISE
+            'whitenoise.storage.CompressedStaticFilesStorage'
+            if HAS_WHITENOISE and not IS_VERCEL
             else 'django.contrib.staticfiles.storage.StaticFilesStorage'
         ),
     },
@@ -173,6 +174,23 @@ STORAGES = {
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 if os.getenv('VERCEL_URL'):
     CSRF_TRUSTED_ORIGINS.append(f"https://{os.getenv('VERCEL_URL')}")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 # Keep customer logins stable across normal page refreshes and browser restarts
 # when the login form's "Keep me logged in" option is enabled.
