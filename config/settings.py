@@ -57,8 +57,8 @@ DEBUG = env_bool('DEBUG', True)
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app')
 if os.getenv('VERCEL_URL'):
     ALLOWED_HOSTS.append(os.getenv('VERCEL_URL'))
-HAS_WHITENOISE = importlib.util.find_spec('whitenoise') is not None
 IS_VERCEL = env_bool('VERCEL', False)
+HAS_WHITENOISE = importlib.util.find_spec('whitenoise') is not None
 
 
 # Application definition
@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': Path('/tmp/db.sqlite3') if IS_VERCEL else BASE_DIR / 'db.sqlite3',
     }
 }
 
