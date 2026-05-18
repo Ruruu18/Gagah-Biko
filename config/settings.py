@@ -54,7 +54,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-change-me')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_bool('DEBUG', True)
 
-ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app')
+if os.getenv('VERCEL_URL'):
+    ALLOWED_HOSTS.append(os.getenv('VERCEL_URL'))
 HAS_WHITENOISE = importlib.util.find_spec('whitenoise') is not None
 
 
@@ -169,6 +171,8 @@ STORAGES = {
 }
 
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+if os.getenv('VERCEL_URL'):
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.getenv('VERCEL_URL')}")
 
 # Keep customer logins stable across normal page refreshes and browser restarts
 # when the login form's "Keep me logged in" option is enabled.
